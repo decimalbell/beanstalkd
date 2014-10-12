@@ -305,6 +305,47 @@ cttestunderscore()
 
 
 void
+filln(char *tube, int n, char c)
+{
+    int i;
+    for (i = 0; i < n; i++) {
+        tube[i] = c;
+    }
+}
+
+void
+cttestuse()
+{
+    char tube1[200] = {0}, resp1[256] = {0};
+    char tube2[201] = {0}, resp2[256] = {0};
+    char tube3[202] = {0};
+
+    port = SERVER();
+    fd = mustdiallocal(port);
+
+    filln(tube1, 199, 't');
+    sprintf(resp1, "USING %s\r\n", tube1);
+    mustsend(fd, "use ");
+    mustsend(fd, tube1);
+    mustsend(fd, "\r\n");
+    ckresp(fd, resp1);
+
+    filln(tube3, 201, 't');
+    mustsend(fd, "use ");
+    mustsend(fd, tube3);
+    mustsend(fd, "\r\n");
+    ckresp(fd, "BAD_FORMAT\r\n");
+
+    filln(tube2, 200, 't');
+    sprintf(resp2, "USING %s\r\n", tube2);
+    mustsend(fd, "use ");
+    mustsend(fd, tube2);
+    mustsend(fd, "\r\n");
+    ckresp(fd, resp2);
+}
+
+
+void
 cttest2cmdpacket()
 {
     port = SERVER();
